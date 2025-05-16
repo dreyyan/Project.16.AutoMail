@@ -1,10 +1,10 @@
- # # # # # # # # # # # # # # # # # # # # # # # #
-#        Project: Rock, Paper, Scissors!        #
-#         Author: dreyyan                       #
-#       Language: Python                        #
-#   Date Started: 05/15/2025                    #
-#  Date Finished: 00/00/2025                    #
- # # # # # # # # # # # # # # # # # # # # # # # #
+ # # # # # # # # # # # # # # # # #
+#        Project: AutoMail        #
+#         Author: dreyyan         #
+#       Language: Python          #
+#   Date Started: 05/16/2025      #
+#  Date Finished: 05/16/2025      #
+ # # # # # # # # # # # # # # # # #
 ''' IMPORTS: MAIN '''
 import time, json, random, string, os, hashlib, re
 from datetime import datetime
