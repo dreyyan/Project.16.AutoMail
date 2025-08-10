@@ -1,10 +1,3 @@
- # # # # # # # # # # # # # # # # #
-#        Project: AutoMail        #
-#         Author: dreyyan         #
-#       Language: Python          #
-#   Date Started: 05/16/2025      #
-#  Date Finished: 05/16/2025      #
- # # # # # # # # # # # # # # # # #
 ''' IMPORTS: MAIN '''
 import time, json, random, string, os, hashlib, re
 from datetime import datetime
@@ -110,15 +103,38 @@ def createEmail():
                     "message": message_input
                 }
                 
-                with open("history.json", "a") as f:
-                    json.dump(data_to_insert, f, indent=4)
+                try:
+                    # 1. Read existing data
+                    with open("history.json", "r") as f:
+                        history = json.load(f)
+                except (FileNotFoundError, json.JSONDecodeError):
+                    history = []
+
+                # 2. Append new data
+                history.append(data_to_insert)
+
+                # 3. Write back to the file
+                with open("history.json", "w") as f:
+                    json.dump(history, f, indent=4)
 
                 line_delay_animation("* Email sent!", 2)
-                break
+                
+                # prompt user to create & send an email again
+                user_choice = input("Would you like to create & send another email? [y/n]: ").lower().strip()
+            
+                if user_choice not in ['y', 'n']:
+                    error_message("Invalid input, please enter 'y' for yes and 'n' for no", 2)
+                else: break
                 
             elif user_confirmation == 'n':
                 line_delay_animation("* Email cancelled...", 2)
                 goToMainMenu()
+        
+        if user_choice == 'y':
+            continue
+        elif user_choice == 'n':
+            break
+
             
 # METHOD: Check History
 def checkHistory():
@@ -133,7 +149,7 @@ def checkHistory():
         
     for email in data:
         print(f"[ {email['date']} ]\nSubject: {email['subject']}\nSender: {email['sender']}\nRecipient: {email['recipient']}\nMessage: {email['message']}")
-        display_line('-', 49)
+        display_line('=', 49)
         print()
         
     press_enter_to_continue()
@@ -152,6 +168,9 @@ def goToMainMenu():
         display_function(2, "Check History")
         display_function(3, "Settings")
         display_function(4, "Exit")
+
+        display_line('=', 49)
+        print()
 
         # Prompt user to enter a choice
         while True:
@@ -177,7 +196,7 @@ def goToMainMenu():
 
         # [4] Exit
         elif user_choice == 4:
-            line_delay_animation("* Exiting AutoMail...", 1)
+            line_delay_animation("* exiting system...", 1)
             exit(0)
 
 def updateCredentials():
@@ -222,9 +241,6 @@ def updateCredentials():
         line_delay_animation("* Credentials successfully updated", 2)
         goToSettings()
 
-def setInterval():
-    pass
-
 # NAVIGATION: SETTINGS
 def goToSettings():
     global email, password
@@ -243,27 +259,26 @@ def goToSettings():
         
         # Display functions
         display_function(1, "Update Credentials")
-        display_function(2, "Set Interval")
-        display_function(3, "Return to Menu")
+        display_function(2, "Return to Menu")
+
+        display_line('=', 49)
+        print()
         
         # Prompt user to enter a choice
         while True:
             try:
                 user_choice = int(input(">> ").strip())
-                if user_choice not in range(1, 4):
-                    error_message("Invalid input, please enter a valid choice[1-3]", 2)
+                if user_choice not in range(1, 3):
+                    error_message("Invalid input, please enter a valid choice[1-2]", 2)
                 else: break
             except ValueError:
-                error_message("Invalid input, please enter a valid choice[1-3]", 2)
+                error_message("Invalid input, please enter a valid choice[1-21]", 2)
         
         if user_choice == 1:
             updateCredentials()
             
         elif user_choice == 2:
-            setInterval()
-            
-        elif user_choice == 3:
             goToMainMenu()
-    
+
 ''' MAIN '''
 goToMainMenu()
